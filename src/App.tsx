@@ -1,26 +1,66 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
+import { Box, CssBaseline } from "@mui/material";
+import { SnackbarProvider } from "./Utilities/Context/SnackBar";
+import Navbar from "./AppoitmentMainPage/Layout/Navbar/Navbar";
+import Footer from "./AppoitmentMainPage/Layout/Footer/Footer";
 
-function App() {
+
+export const GeneralRoutes = () => (
+  <Route path="/business-name" element={
+    // <DrushimThemeProvider>
+    <>
+      <CssBaseline />
+      <Navbar />
+      <Box flex={1} height={'calc(100dvh - 64px)'}>
+        {/* <DrushimJobsDataProvider> */}
+          <SnackbarProvider>
+            <Outlet />
+          </SnackbarProvider>
+        {/* </DrushimJobsDataProvider> */}
+        <Footer />
+      </Box>
+    </>
+    // </DrushimThemeProvider>
+  }>
+    <Route index element={<Navigate to="/business-name" replace />} />
+  </Route>
+);
+
+// export const AuthRoutes = () => (
+//   <Route path="/auth" element={
+//     <SnackbarProvider>
+//       <AuthBackground>
+//         <Outlet />
+//       </AuthBackground>
+//     </SnackbarProvider>
+//   }>
+//     <Route path="login" element={<LoginPage />} />
+//     <Route path="resetPassword" element={<EmailResetPasswordPage />} />
+//     <Route path="action" element={<ResetPasswordPage />} />
+//     <Route path="*" element={<Navigate to="/auth/login" replace />} />
+//     <Route index element={<Navigate to="/auth/login" replace />} />
+//   </Route>
+// );
+
+export const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-        Appointment Scheduling (final project)
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <BrowserRouter>
+      {/* <ScrollToTopPageRoute />
+      <AuthProvider> */}
+        {/* <DialogProvider> */}
+          <SnackbarProvider>
+            <Routes>
+              {GeneralRoutes()}
+              {/* {AuthRoutes()} */}
+              {/* {ManagementRoutes()} */}
 
-export default App;
+              {/* Default and fallback routes */}
+              <Route path="" element={<Navigate to="/business-name" replace />} />
+              <Route path="*" element={<Navigate to="/not-found" replace />} />
+            </Routes>
+          </SnackbarProvider>
+        {/* </DialogProvider> */}
+      {/* </AuthProvider> */}
+    </BrowserRouter>
+  );
+};
