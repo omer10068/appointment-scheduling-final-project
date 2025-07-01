@@ -6,28 +6,38 @@ export const appointmentSchema = yup.object().shape({
   customerId: yup.number().positive().integer().required("Customer ID is required"),
   workerId: yup.number().positive().integer().required("Worker ID is required"),
   service: yup.string().required("Service type is required"),
-  date: yup.date().required("Appointment date is required"),
+  startDate: yup.date().required("Appointment startDate is required"),
+  endDate: yup.date().required("Appointment endDate is required"),
   approved: yup.boolean().default(false),  // Default is set to false and is not required
-  createdAt: yup
-    .date()
-    .optional(),
+  createdAt: yup.date().optional(),
+  createdBy: yup.number().positive().integer().optional(),
 });
 
-// Appointment.ts
 export class Appointment {
-  id?: string;  // ID is optional, will be set by Firebase
   customerId: number;  // ID of the user who made the appointment
-  workerId: number;  // ID of the specific business owner (e.g., a specific barber or beautician)
-  service: string;  // Type of service for the appointment
-  date: Date;  // Date and time of the appointment
-  approved: boolean;  // Whether the appointment has been approved
+  workerId: number;    // ID of the specific business owner (e.g., a specific barber or beautician)
+  service: string;     // id - Type of service for the appointment
+  startDate: Date;     // start date and time of the appointment
+  endDate: Date;       // end date and time of the appointment
+  approved: boolean;   // Whether the appointment has been approved - לא חובה בבנאי, אבל תמיד קיים
+  createdAt?: Date;
+  createdBy?: number;
+  id?: string;
 
-  constructor(customerId: number, workerId: number, service: string, date: Date, approved: boolean = false, id?: string) {
+  constructor(
+    customerId: number,
+    workerId: number,
+    service: string,
+    startDate: Date,
+    endDate: Date,
+    approved: boolean = false
+  ) {
     this.customerId = customerId;
     this.workerId = workerId;
     this.service = service;
-    this.date = date;
+    this.startDate = startDate;
+    this.endDate = endDate;
     this.approved = approved;
-    this.id = id; // Optional, if provided
   }
 }
+

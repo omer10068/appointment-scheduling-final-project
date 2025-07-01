@@ -1,70 +1,108 @@
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
-import { Box, Button, CssBaseline } from "@mui/material";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { SnackbarProvider } from "./Utilities/Context/SnackBar";
-import Navbar from "./AppoitmentMainPage/Layout/Navbar/Navbar";
-import Footer from "./AppoitmentMainPage/Layout/Footer/Footer";
-import { CustomerService } from "./Firebase/FirebaseFunctions/Customer/CustomerService";
-import { db } from "./Firebase/FirebaseConfig/firebase";
-import { Customer } from "./Firebase/FirebaseFunctions/Customer/Customer";
+import { customerService, db } from "./Firebase/FirebaseConfig/firebase";
+import AppoitmentPage from "./AppoitmentMainPage/Pages/AppoitmentPage/AppoitmentPage";
+import { Appointment } from "./Firebase/FirebaseFunctions/Appointment/Appointment";
+import OTPVerificationPage from "./AppoitmentMainPage/Pages/OTPVerificationPage/OTPVerificationPage";
+import AppWrapper from "./AppWrapper/AppWrapper";
 
-const customerService = new CustomerService(db);
+// const handleAddAppointment = async () => {
+//   const customerId = 123456; // customer id
+//   const workerId = 67890; // workerId
+//   const service = "9IoH6aS8C8OSDnZuyHry"; // serviceId
+//   const startDate = getTime().toDate(); // date appointment
+//   try {
+//     await appointmentService.addAppointment(customerId, workerId, service, startDate);
+//     alert("Appointment created successfully!");
+//   } catch (error) {
+//     console.error("Failed to create appointment: == ", error);
+//     alert("Failed to create appointment. Check the console for more information.");
+//   }
+// };
 
-const handleAddAppointment = async () => {
-  const customerId = 12345; // customer id
-  const workerId = 67890; // workerId
-  const service = "Haircut"; // serviceId
-  const date = new Date(); // date appointment
+// const handleAddCustomer = async () => {
+//   const customerData = {
+//     id: 12345, // customer id
+//     firstName: "Omer",
+//     lastName: "Levi",
+//   };
 
-  try {
-    await customerService.addAppointment(customerId, workerId, service, date);
-    alert("Appointment created successfully!");
-  } catch (error) {
-    console.error("Failed to create appointment:", error);
-    alert("Failed to create appointment. Check the console for more information.");
-  }
+//   try {
+//     await customerService.addCustomer(new Customer(customerData.id, customerData.firstName, customerData.lastName));
+//     alert("User created successfully!");
+//   } catch (error) {
+//     console.error("Failed to create user:", error);
+//     alert("Failed to create user. Check the console for more information.");
+//   }
+// };
+
+
+// ######################## working hours
+const defaultWorkingHours = {
+  sunday: { start: "08:00", end: "17:00" },
+  monday: { start: "08:00", end: "17:00" },
+  tuesday: { start: "08:00", end: "17:00" },
+  wednesday: { start: "08:00", end: "17:00" },
+  thursday: { start: "08:00", end: "17:00" },
+  friday: { start: "08:00", end: "12:30" },
+  // saturday:  null // סגור בשבת
 };
 
-const handleAddCustomer = async () => {
-  const customerData = {
-    id: 12345, // customer id
-    firstName: "Omer",
-    lastName: "Levi",
-  };
-
-  try {
-    await customerService.addCustomer(new Customer(customerData.id, customerData.firstName, customerData.lastName));
-    alert("User created successfully!");
-  } catch (error) {
-    console.error("Failed to create user:", error);
-    alert("Failed to create user. Check the console for more information.");
-  }
+export const setWorkingHours = async (customerId: number) => {
+  customerService.setWorkingHours(customerId, defaultWorkingHours);
 };
+// #####################################
+const today = new Date();
+const exampleAppointments: Appointment[] = [
+  {
+    service: "Meeting with Erin",
+    startDate: new Date(2025, 3, 21, 9, 0),
+    endDate: new Date(2025, 3, 21, 12, 30),
+    customerId: 0,
+    workerId: 0,
+    approved: false
+  },
+  {
+    service: "Lunch with Lisa",
+    startDate: new Date(2025, 3, 21, 12, 0),
+    endDate: new Date(2025, 3, 21, 13, 0),
+    customerId: 0,
+    workerId: 0,
+    approved: false
+  },
+];
 
 
 export const GeneralRoutes = () => (
-  <Route path="/business-name" element={
-    // <DrushimThemeProvider>
-    <>
-      <CssBaseline />
-      <Navbar />
-      <Box flex={1} height={'calc(100dvh - 64px)'}>
-        {/* <DrushimJobsDataProvider> */}
-        <SnackbarProvider>
-          <Outlet />
-        </SnackbarProvider>
-        {/* </DrushimJobsDataProvider> */}
-        <Footer />
-      </Box>
-    </>
-    // </DrushimThemeProvider>
-  }>
-    {/* <Route index element={<Navigate to="/business-name" replace />} /> */}
-    <Route path="/business-name" element={<Box flex={1} border={1}>
-      <Button onClick={handleAddAppointment}>
-        TEST
-      </Button>
-    </Box>} />
-  </Route>
+  // <Route path="/business-name" element={
+  //   // <DrushimThemeProvider>
+  //   <>
+  //     <CssBaseline />
+  //     <Navbar />
+  //     <Box flex={1} height={'calc(100dvh - 64px)'}>
+  //       {/* <DrushimJobsDataProvider> */}
+  //       <SnackbarProvider>
+  //         <Outlet />
+  //       </SnackbarProvider>
+  //       {/* </DrushimJobsDataProvider> */}
+  //       <Footer />
+  //     </Box>
+  //   </>
+  //   // </DrushimThemeProvider>
+  // }>
+  //   {/* <Route index element={<Navigate to="/business-name" replace />} /> */}
+  //   <Route path="/business-name" element={<Box flex={1} border={1}>
+  //     <Button onClick={handleAddAppointment}>
+  //       TEST
+  //     </Button>
+  //   </Box>} />
+  // </Route>
+
+  // <Route path="/business-name" element={<BusinessPage/>} />
+  <Route path="/appointment" element={
+    <AppoitmentPage />
+  } />
+
 );
 
 // export const AuthRoutes = () => (
@@ -90,6 +128,7 @@ export const App = () => {
       <AuthProvider> */}
       {/* <DialogProvider> */}
       <SnackbarProvider>
+      <AppWrapper>
         <Routes>
           {GeneralRoutes()}
           {/* {AuthRoutes()} */}
@@ -98,7 +137,10 @@ export const App = () => {
           {/* Default and fallback routes */}
           <Route path="" element={<Navigate to="/business-name" replace />} />
           <Route path="*" element={<Navigate to="/not-found" replace />} />
+
+          <Route path="/test" element={<OTPVerificationPage />} />
         </Routes>
+        </AppWrapper>
       </SnackbarProvider>
       {/* </DialogProvider> */}
       {/* </AuthProvider> */}

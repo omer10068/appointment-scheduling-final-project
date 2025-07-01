@@ -1,6 +1,14 @@
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import * as yup from 'yup';
 
+// Define the type for working hours
+export type WorkingHours = {
+  [day: string]: {
+    start: string;
+    end: string;
+  };
+};
+
 // Define a Yup schema for Customer validation
 export const customerSchema = yup.object().shape({
   id: yup
@@ -17,27 +25,36 @@ export const customerSchema = yup.object().shape({
     .matches(/^[a-zA-Z ]+$/, "Last name must contain only letters and spaces")
     .min(2, "Last name must be at least 2 characters long")
     .required("Last name is required"),
-  createdAt: yup
-    .date()
-    .optional(),
-  lastModified: yup
-    .date()
+  createdAt: yup.date().optional(),
+  lastModified: yup.date().optional(),
+  workingHours: yup
+    .object()
+    .shape({
+      Sunday: yup.object({ start: yup.string(), end: yup.string() }),
+      Monday: yup.object({ start: yup.string(), end: yup.string() }),
+      Tuesday: yup.object({ start: yup.string(), end: yup.string() }),
+      Wednesday: yup.object({ start: yup.string(), end: yup.string() }),
+      Thursday: yup.object({ start: yup.string(), end: yup.string() }),
+      Friday: yup.object({ start: yup.string(), end: yup.string() }),
+      Saturday: yup.object({ start: yup.string(), end: yup.string() }),
+    })
     .optional()
 });
 
 
 // Customer.ts
 export class Customer {
-  id: number; // phone number as ID
+  id: number;
   firstName: string;
   lastName: string;
-  createdAt?: Date; // Optional since it will be set by the server
+  createdAt?: Date;
+  workingHours?: WorkingHours;
 
-  constructor(id: number, firstName: string, lastName: string) {
+  constructor(id: number, firstName: string, lastName: string, workingHours?: WorkingHours) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.createdAt = undefined;
+    this.workingHours = workingHours;
   }
 
   toString(): string {
@@ -45,23 +62,30 @@ export class Customer {
   }
 }
 
+// Firestore converter
 export const customerConverter = {
   toFirestore: (customer: Customer): DocumentData => {
-    // Only include createdAt if it's not undefined
     const firestoreData: DocumentData = {
       id: customer.id,
       firstName: customer.firstName,
       lastName: customer.lastName,
     };
+
     if (customer.createdAt) {
       firestoreData.createdAt = customer.createdAt;
     }
+
+    if (customer.workingHours) {
+      firestoreData.workingHours = customer.workingHours;
+    }
+
     return firestoreData;
   },
+
   fromFirestore: (snapshot: QueryDocumentSnapshot, options: any): Customer => {
     const data = snapshot.data(options);
-    const customer = new Customer(data.id, data.firstName, data.lastName);
-    customer.createdAt = data.createdAt ? data.createdAt.toDate() : undefined; // Ensure Date conversion if exists
+    const customer = new Customer(data.id, data.firstName, data.lastName, data.workingHours);
+    customer.createdAt = data.createdAt?.toDate();
     return customer;
   }
 };
