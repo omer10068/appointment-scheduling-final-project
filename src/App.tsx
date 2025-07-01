@@ -5,7 +5,6 @@ import AppoitmentPage from "./AppoitmentMainPage/Pages/AppoitmentPage/Appoitment
 import { Appointment } from "./Firebase/FirebaseFunctions/Appointment/Appointment";
 import OTPVerificationPage from "./AppoitmentMainPage/Pages/OTPVerificationPage/OTPVerificationPage";
 import AppWrapper from "./AppWrapper/AppWrapper";
-import MangementPage from "./AppoitmentMainPage/Pages/MangementPage/MangementPage";
 
 // const handleAddAppointment = async () => {
 //   const customerId = 123456; // customer id
@@ -100,11 +99,11 @@ export const GeneralRoutes = () => (
   // </Route>
 
   // <Route path="/business-name" element={<BusinessPage/>} />
-  <Route path="/appointment" element={<AppoitmentPage />} />
-  
+  <Route path="/appointment" element={
+    <AppoitmentPage />
+  } />
+
 );
-
-
 
 // export const AuthRoutes = () => (
 //   <Route path="/auth" element={
@@ -138,7 +137,7 @@ export const App = () => {
           {/* Default and fallback routes */}
           <Route path="" element={<Navigate to="/business-name" replace />} />
           <Route path="*" element={<Navigate to="/not-found" replace />} />
-          <Route path="/management" element={<MangementPage />} />
+
           <Route path="/test" element={<OTPVerificationPage />} />
         </Routes>
         </AppWrapper>
