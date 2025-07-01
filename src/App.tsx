@@ -5,6 +5,7 @@ import AppoitmentPage from "./AppoitmentMainPage/Pages/AppoitmentPage/Appoitment
 import { Appointment } from "./Firebase/FirebaseFunctions/Appointment/Appointment";
 import OTPVerificationPage from "./AppoitmentMainPage/Pages/OTPVerificationPage/OTPVerificationPage";
 import AppWrapper from "./AppWrapper/AppWrapper";
+import MangementPage from "./AppoitmentMainPage/Pages/MangementPage/MangementPage";
 
 // const handleAddAppointment = async () => {
 //   const customerId = 123456; // customer id
@@ -128,18 +129,18 @@ export const App = () => {
       <AuthProvider> */}
       {/* <DialogProvider> */}
       <SnackbarProvider>
-      <AppWrapper>
-        <Routes>
-          {GeneralRoutes()}
-          {/* {AuthRoutes()} */}
-          {/* {ManagementRoutes()} */}
+        <AppWrapper>
+          <Routes>
+            {GeneralRoutes()}
+            {/* {AuthRoutes()} */}
+            {/* {ManagementRoutes()} */}
 
-          {/* Default and fallback routes */}
-          <Route path="" element={<Navigate to="/business-name" replace />} />
-          <Route path="*" element={<Navigate to="/not-found" replace />} />
-
-          <Route path="/test" element={<OTPVerificationPage />} />
-        </Routes>
+            {/* Default and fallback routes */}
+            <Route path="" element={<Navigate to="/business-name" replace />} />
+            <Route path="*" element={<Navigate to="/not-found" replace />} />
+            <Route path="/management" element={<MangementPage />} />
+            <Route path="/test" element={<OTPVerificationPage />} />
+          </Routes>
         </AppWrapper>
       </SnackbarProvider>
       {/* </DialogProvider> */}
