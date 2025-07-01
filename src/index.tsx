@@ -2,18 +2,31 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { App } from './App';
+
+// RTL - Right to Left imports
+import createCache from '@emotion/cache';
+import {CacheProvider} from '@emotion/react';
+import {prefixer} from 'stylis';
+import rtlPlugin from 'stylis-plugin-rtl';
+import {App} from "./App";
+
+// take care of RTL stuff
+const cacheRtl = createCache({
+    key: 'muirtl',
+    stylisPlugins: [prefixer, rtlPlugin],
+});
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    document.getElementById('root') as HTMLElement
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+root.render(
+    // No need for double rendering
+    // <React.StrictMode>
+        <CacheProvider value={cacheRtl}>
+            <App/>
+        </CacheProvider>
+    // </React.StrictMode>
+);
+
 reportWebVitals();

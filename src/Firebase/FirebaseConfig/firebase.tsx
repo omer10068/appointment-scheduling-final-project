@@ -5,6 +5,9 @@ import {initializeFirestore, persistentLocalCache, persistentMultipleTabManager}
 import {getAuth} from "firebase/auth";
 import {getFunctions} from "firebase/functions";
 import {getStorage} from "firebase/storage";
+import { ServiceService } from "../FirebaseFunctions/Service/ServiceService";
+import { AppointmentService } from "../FirebaseFunctions/Appointment/AppointmentService";
+import { CustomerService } from "../FirebaseFunctions/Customer/CustomerService";
 
 // Firebase configuration (environment variables)
 export const firebaseConfig = {
@@ -37,5 +40,9 @@ export const functions = getFunctions(app);
 
 // Initialize Firebase Storage
 export const storage = getStorage(app);
+
+export const serviceService = new ServiceService(db);
+export const appointmentService = new AppointmentService(db);
+export const customerService = new CustomerService(db);
 
 export default app;
